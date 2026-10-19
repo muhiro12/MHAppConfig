@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "bundleIdentifier": "com.muhiro12.Stally",
+  "features": {
+    "remoteUpdate": {
+      "schemaVersion": 1,
+      "revision": 1,
+      "requirement": null,
+      "scheduledRequirements": []
+    }
+  }
+}
