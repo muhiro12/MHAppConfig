@@ -110,6 +110,38 @@ class ValidationTests(unittest.TestCase):
         self.write(self.policy)
         self.assertEqual(self.verify(base=rollback).returncode, 0)
 
+    def test_shallow_history_cannot_hide_a_previously_published_revision(self):
+        self.policy["features"]["remoteUpdate"]["revision"] = 5
+        self.write(self.policy)
+        self.save()
+        self.policy["features"]["remoteUpdate"]["revision"] = 1
+        self.write(self.policy)
+        self.save()
+        with tempfile.TemporaryDirectory() as directory:
+            checkout = Path(directory, "shallow")
+            subprocess.run([
+                "git", "clone", "--quiet", "--depth=1", self.root.as_uri(), str(checkout),
+            ], check=True)
+            self.policy["features"]["remoteUpdate"]["revision"] = 3
+            candidate = checkout / "example/app.json"
+            candidate.write_text(json.dumps(self.policy))
+
+            def check():
+                return subprocess.run([
+                    sys.executable, str(VERIFIER), "--validator", VALIDATOR, "--base", "HEAD",
+                ], cwd=checkout, capture_output=True, text=True, check=False)
+
+            result = check()
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("Complete Git history is required", result.stderr)
+            subprocess.run([
+                "git", "-C", str(checkout), "fetch", "--quiet", "--unshallow",
+            ], check=True)
+            self.assertNotEqual(check().returncode, 0)
+            self.policy["features"]["remoteUpdate"]["revision"] = 6
+            candidate.write_text(json.dumps(self.policy))
+            self.assertEqual(check().returncode, 0)
+
     def test_new_endpoint_and_initial_push_are_validated(self):
         new = copy.deepcopy(self.policy)
         new["bundleIdentifier"] = "new.app"

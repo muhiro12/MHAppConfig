@@ -11,7 +11,9 @@ Configuration history is independent of each app's source releases.
 | Incomes | [incomes/app.json](incomes/app.json) |
 
 The shared configuration envelope contains `schemaVersion`, `bundleIdentifier`,
-and `features`. Each feature owns its policy and revisions. Incomes currently
+and `features`. The update feature has its own `schemaVersion` (currently 1;
+omission also means 1), independently of the envelope version and policy
+revision. Each feature owns its policy and revisions. Incomes currently
 uses only `features.remoteUpdate`; additional feature sections can share the
 same document when an adopting app needs them.
 
@@ -26,7 +28,7 @@ The live Incomes configuration is available without authentication at this
 Clients use the branch-based URL so operational changes can reach installed
 apps independently of an App Store release. Keep deployed paths stable.
 
-Adopting apps use MHPlatform 1.19.0 or later, including its timed update plans
+Adopting apps use MHPlatform 1.20.0 or later, including its timed update plans
 and automatic isolation of update-section failures. An unchanged policy needs
 no publisher renewal, expiry timestamp, scheduled workflow, or periodic commit.
 Successful validated network fetches renew bounded client-side evidence;
@@ -60,7 +62,7 @@ for already-distributed clients; it has a different format and endpoint.
   than republishing an older file.
 
 Read the package's
-[configuration and update contract](https://github.com/muhiro12/MHPlatform/blob/1.19.0/Designs/Architecture/remote-update.md)
+[configuration and update contract](https://github.com/muhiro12/MHPlatform/blob/1.20.0/Designs/Architecture/remote-update.md)
 for feature isolation, plan evaluation, offline freshness, and App Store
 publication checks. Maintain one current shared configuration per app, without
 separate policy endpoints for obsolete prerelease readers.
@@ -84,9 +86,9 @@ The generated checkout, modules, and executable remain in ignored `.build/`.
 
 The validator uses the same decoder and immutable-revision comparison as the
 package's runtime. It checks every `*/app.json` and compares it with readable
-policy in the destination branch's first-parent history. It rejects invalid requirements,
-unsupported format versions, identity changes, endpoint deletion, lower
-revisions, and changed content at an already published revision. Sibling
+policy in the destination branch's first-parent history. It rejects invalid
+requirements, unsupported format versions, identity changes, endpoint deletion,
+lower revisions, and changed content at an already published revision. Sibling
 features do not change update-policy revisions. It does not check App Store
 publication or make a live update happen.
 
@@ -113,9 +115,10 @@ restore an old Git revision, delete the endpoint, or reuse a revision. An
 unreadable historical file is reported and skipped for this contract's revision
 comparison; the candidate is still checked against all readable policies in the
 retained main-branch history. This does not establish compatibility with older
-reader formats. This
-allows repair of malformed JSON without bypassing known revision history.
-Keep complete Git history for validation and preserve deployed paths.
+reader formats. This allows repair of malformed JSON without bypassing known
+revision history. Shallow repositories are rejected because they can hide a
+previously published revision. Keep complete Git history for validation and
+preserve deployed paths.
 
 If a client already cached valid policy, removing or corrupting the remote file
 cannot cancel it. Publish an explicit higher-revision cancellation. Offline

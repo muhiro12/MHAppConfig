@@ -49,6 +49,8 @@ def validate_history(validator, base, path, current, previous):
 
 
 def verify(validator, base, candidate):
+    if git("rev-parse", "--is-shallow-repository").strip() != b"false":
+        raise ValueError("Complete Git history is required for published revision checks")
     current_paths = paths(candidate)
     old_paths = paths(base) if base else set()
     deleted = old_paths - current_paths
