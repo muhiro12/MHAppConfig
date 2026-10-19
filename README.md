@@ -66,13 +66,70 @@ publication checks. Maintain one current shared configuration per app, without
 separate policy endpoints for obsolete prerelease readers.
 Only public configuration belongs here; credentials and user data do not.
 
-From the repository root, check JSON syntax and whitespace before committing:
+## Validation before publication
+
+The repository pins the package's validator source in `.mhplatform-revision`.
+On macOS with Xcode installed, run:
 
 ```sh
-python3 -m json.tool incomes/app.json > /dev/null
+bash scripts/validate.sh
 git diff --check
 ```
 
-Syntax checks do not validate policy semantics. Before changing the wire format
-or enabling a new consumer, also verify the exact file with the supported
-MHPlatform decoder and the adopting app's relevant tests and runtime checks.
+The first command obtains the pinned public MHPlatform source and builds only
+its configuration/update modules with Apple's compiler. It adds no app-side
+configuration or dependency. An existing clean checkout at the pinned revision
+can be used offline with `MHPLATFORM_CHECKOUT=/path/to/MHPlatform`.
+The generated checkout, modules, and executable remain in ignored `.build/`.
+
+The validator uses the same decoder and immutable-revision comparison as the
+package's runtime. It checks every `*/app.json` and compares it with readable
+policy in the destination branch's first-parent history. It rejects invalid requirements,
+unsupported format versions, identity changes, endpoint deletion, lower
+revisions, and changed content at an already published revision. Sibling
+features do not change update-policy revisions. It does not check App Store
+publication or make a live update happen.
+
+Enable the repository-local sending check once per clone:
+
+```sh
+git config --local core.hooksPath .githooks
+```
+
+The hook validates the exact commits being sent to `main`; uncommitted repairs
+do not clear a broken outgoing commit. It also refuses deletion and rewriting
+of the live branch. Other development branches are unaffected. The PR workflow
+runs the same checks and recovery tests with read-only permissions.
+A push-triggered run is a diagnostic after publication, not a publication gate.
+Local hooks can be bypassed by other clients. To enforce the check on GitHub,
+require the PR job and updates through pull requests in branch rules. Those
+server-side rules and the deployment URL are not changed by this tooling.
+
+## Recovery and rollout
+
+Repair a bad policy with a revision greater than **every previously published
+revision**, preserving the intended baseline and complete plan list. Do not
+restore an old Git revision, delete the endpoint, or reuse a revision. An
+unreadable historical file is reported and skipped for this contract's revision
+comparison; the candidate is still checked against all readable policies in the
+retained main-branch history. This does not establish compatibility with older
+reader formats. This
+allows repair of malformed JSON without bypassing known revision history.
+Keep complete Git history for validation and preserve deployed paths.
+
+If a client already cached valid policy, removing or corrupting the remote file
+cannot cancel it. Publish an explicit higher-revision cancellation. Offline
+clients observe it on a later successful fetch; local and publication evidence
+retain their normal bounded lifetime. This is not an immediate global revocation
+or a replacement for server-side authorization.
+
+The original app-owned legacy endpoint must remain available until its deployed
+readers are retired. Introducing this shared endpoint cannot redirect an older
+binary retroactively. Do not enable a new policy format on the same URL until
+all readers using that URL understand its compatibility rules; use a new
+endpoint for an incompatible future reader migration.
+
+Publish the pinned MHPlatform revision **before** sending these validator files
+to MHAppConfig, so clean clones and PR jobs can obtain it. Updating this tooling
+does not change the current Incomes policy or begin app adoption. App-specific
+integration and Store release still require their own tests and rollout.

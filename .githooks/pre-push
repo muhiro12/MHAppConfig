@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repository_root=$(git rev-parse --show-toplevel)
+while read -r local_ref local_sha remote_ref remote_sha; do
+  if [[ "$remote_ref" != "refs/heads/main" ]]; then
+    continue
+  fi
+  if [[ "$local_sha" =~ ^0+$ ]]; then
+    echo "The live configuration branch cannot be deleted." >&2
+    exit 1
+  fi
+  if [[ ! "$remote_sha" =~ ^0+$ ]] && ! git merge-base --is-ancestor "$remote_sha" "$local_sha"; then
+    echo "The live configuration branch must advance without rewriting published history." >&2
+    exit 1
+  fi
+  bash "$repository_root/scripts/validate.sh" --base "$remote_sha" --candidate "$local_sha" </dev/null
+done
