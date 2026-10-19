@@ -1,6 +1,13 @@
 {
+  "schemaVersion": 1,
   "bundleIdentifier": "com.muhiro12.Incomes",
-  "appStoreID": 1584472982,
-  "storefront": "jp",
-  "minimumVersion": "5.0"
+  "features": {
+    "remoteUpdate": {
+      "revision": 1,
+      "requirement": {
+        "minimumVersion": "5.0",
+        "effectiveAt": "2026-10-19T00:00:00Z"
+      }
+    }
+  }
 }
