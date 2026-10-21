@@ -9,8 +9,8 @@ Configuration history is independent of each app's source releases.
 | App | Shared configuration |
 | --- | --- |
 | Incomes | [incomes/app.json](incomes/app.json) |
-| Stally | [stally/app.json](stally/app.json) |
 | Cookle | [cookle/app.json](cookle/app.json) |
+| Stally | [stally/app.json](stally/app.json) |
 
 The shared configuration envelope contains `schemaVersion`, `bundleIdentifier`,
 and `features`. The update feature has its own `schemaVersion` (currently 1;
@@ -21,9 +21,7 @@ same document when an adopting app needs them.
 
 Incomes uses App Store ID `1584472982` and the package's default publication
 reference without a fixed country code. Store identity belongs to the client
-and is not remotely changed by this document. Stally uses App Store ID
-`6760996986`; its initial revision has no active minimum or scheduled
-requirement while its first public release is being prepared.
+and is not remotely changed by this document.
 
 Cookle uses App Store ID
 `6483363226` and confirms publication in the Japanese storefront. Its initial
@@ -32,12 +30,16 @@ evidence keeps offline editing available; a confirmed required update blocks
 library data mutations from both the app and shortcuts. Reading and exporting
 remain available.
 
+Stally uses App Store ID `6760996986`; its initial revision has no active
+minimum or scheduled requirement while its first public release is being
+prepared.
+
 ## Publishing
 
 The live Incomes configuration is available without authentication at this
 [HTTPS Raw URL](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/incomes/app.json).
-Stally reads [its own HTTPS Raw URL](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/stally/app.json).
 Cookle reads [its own HTTPS Raw URL](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/cookle/app.json).
+Stally reads [its own HTTPS Raw URL](https://raw.githubusercontent.com/muhiro12/MHAppConfig/main/stally/app.json).
 Clients use the branch-based URL so operational changes can reach installed
 apps independently of an App Store release. Keep deployed paths stable.
 
