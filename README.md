@@ -107,20 +107,17 @@ lower revisions, and changed content at an already published revision. Sibling
 features do not change update-policy revisions. It does not check App Store
 publication or make a live update happen.
 
-Enable the repository-local sending check once per clone:
+To check a committed candidate before publishing, fetch the current remote
+branch and compare the two revisions:
 
 ```sh
-git config --local core.hooksPath .githooks
+git fetch origin main
+bash scripts/validate.sh --base FETCH_HEAD --candidate HEAD
 ```
 
-The hook validates the exact commits being sent to `main`; uncommitted repairs
-do not clear a broken outgoing commit. It also refuses deletion and rewriting
-of the live branch. Other development branches are unaffected. The PR workflow
-runs the same checks and recovery tests with read-only permissions.
-A push-triggered run is a diagnostic after publication, not a publication gate.
-Local hooks can be bypassed by other clients. To enforce the check on GitHub,
-require the PR job and updates through pull requests in branch rules. Those
-server-side rules and the deployment URL are not changed by this tooling.
+The pull request workflow validates the proposed configuration and runs recovery
+tests. A direct push to `main` publishes the configuration before the
+push-triggered workflow reports its result.
 
 ## Recovery and rollout
 
