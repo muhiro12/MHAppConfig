@@ -3,6 +3,7 @@
   "bundleIdentifier": "com.muhiro12.Incomes",
   "features": {
     "remoteUpdate": {
+      "schemaVersion": 1,
       "revision": 2,
       "requirement": {
         "minimumVersion": "5.0",
