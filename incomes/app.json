@@ -9,6 +9,41 @@
         "effectiveAt": "2026-10-19T00:00:00Z"
       },
       "scheduledRequirements": []
+    },
+    "announcements": {
+      "schemaVersion": 1,
+      "defaultLanguage": "en",
+      "items": [
+        {
+          "id": "announcement-display-test-20261123",
+          "startsAt": "2026-11-23T01:56:47Z",
+          "endsAt": "2026-11-23T02:56:47Z",
+          "minimumVersion": "6.4",
+          "maximumVersion": "6.4",
+          "localizations": {
+            "en": {
+              "title": "Announcement display test",
+              "body": "This is a test of in-app announcements. No action is needed."
+            },
+            "es": {
+              "title": "Prueba de avisos",
+              "body": "Estamos probando los avisos en la aplicación. No tienes que hacer nada."
+            },
+            "fr": {
+              "title": "Test des annonces",
+              "body": "Nous testons les annonces dans l’application. Aucune action de votre part n’est nécessaire."
+            },
+            "ja": {
+              "title": "お知らせの表示テスト",
+              "body": "アプリ内のお知らせ表示を確認しています。お手続きは不要です。"
+            },
+            "zh-Hans": {
+              "title": "公告显示测试",
+              "body": "我们正在测试应用内公告。你无需进行任何操作。"
+            }
+          }
+        }
+      ]
     }
   }
 }
