@@ -16,6 +16,33 @@
       "defaultLanguage": "en",
       "items": [
         {
+          "id": "monthly-plan-price-change-20270101",
+          "endsAt": "2026-12-31T15:00:00Z",
+          "minimumVersion": "6.4",
+          "localizations": {
+            "en": {
+              "title": "Monthly Plan price change",
+              "body": "We plan to change the price of the Monthly Plan on January 1, 2027."
+            },
+            "es": {
+              "title": "Cambio de precio del plan mensual",
+              "body": "Tenemos previsto cambiar el precio del plan mensual el 1 de enero de 2027."
+            },
+            "fr": {
+              "title": "Modification du tarif de l’abonnement mensuel",
+              "body": "Nous prévoyons de modifier le tarif de l’abonnement mensuel le 1er janvier 2027."
+            },
+            "ja": {
+              "title": "月間プランの料金改定について",
+              "body": "2027年1月1日より、月間プランの料金を改定する予定です。"
+            },
+            "zh-Hans": {
+              "title": "月度订阅价格调整",
+              "body": "我们计划自2027年1月1日起调整月度订阅价格。"
+            }
+          }
+        },
+        {
           "id": "announcement-display-test-20261123",
           "startsAt": "2026-11-23T01:56:47Z",
           "endsAt": "2026-11-23T02:56:47Z",
