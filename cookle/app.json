@@ -7,6 +7,38 @@
       "revision": 1,
       "requirement": null,
       "scheduledRequirements": []
+    },
+    "announcements": {
+      "schemaVersion": 1,
+      "defaultLanguage": "en",
+      "items": [
+        {
+          "id": "subscription-price-increase",
+          "minimumVersion": "4.5",
+          "localizations": {
+            "en": {
+              "title": "Planned subscription price increase",
+              "body": "We plan to raise the price of the Cookle subscription."
+            },
+            "ja": {
+              "title": "サブスクリプション料金の改定予定",
+              "body": "Cookleのサブスクリプション料金を引き上げる予定です。"
+            },
+            "es": {
+              "title": "Próximo aumento del precio de la suscripción",
+              "body": "Tenemos previsto subir el precio de la suscripción a Cookle."
+            },
+            "fr": {
+              "title": "Hausse prévue du prix de l’abonnement",
+              "body": "Nous prévoyons d’augmenter le prix de l’abonnement à Cookle."
+            },
+            "zh-Hans": {
+              "title": "订阅价格调整预告",
+              "body": "我们计划上调 Cookle 的订阅价格。"
+            }
+          }
+        }
+      ]
     }
   }
 }
