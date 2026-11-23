@@ -24,7 +24,7 @@ if [[ -z "${MHPLATFORM_CHECKOUT:-}" ]]; then
   git -C "$checkout" checkout --detach "$revision"
 fi
 if [[ "$(git -C "$checkout" rev-parse HEAD)" != "$revision" ]] || \
-   [[ -n "$(git -C "$checkout" status --porcelain --untracked-files=all -- Sources/MHRemoteConfig Sources/MHRemoteUpdate Tools/RemoteConfigValidator.swift ci_scripts/tasks/build_remote_config_validator.sh)" ]]; then
+   [[ -n "$(git -C "$checkout" status --porcelain --untracked-files=all -- Sources/MHRemoteConfig Sources/MHRemoteUpdate Sources/MHAnnouncements Tools/RemoteConfigValidator.swift ci_scripts/tasks/build_remote_config_validator.sh)" ]]; then
   echo "The validator requires the pinned, unchanged MHPlatform source revision." >&2
   exit 1
 fi

@@ -24,7 +24,7 @@ class ValidationTests(unittest.TestCase):
         self.policy = {
             "schemaVersion": 1,
             "bundleIdentifier": "example.app",
-            "features": {"remoteUpdate": {"revision": 2, "requirement": None}},
+            "features": {"remoteUpdate": {"schemaVersion": 1, "revision": 2, "requirement": None}},
         }
         self.write(self.policy)
         self.base = self.save()
@@ -52,6 +52,20 @@ class ValidationTests(unittest.TestCase):
         self.policy["features"]["futureFeature"] = {"value": 1}
         self.write(self.policy)
         self.assertEqual(self.verify(self.save()).returncode, 0)
+
+    def test_implicit_schema_is_rejected_in_candidates_but_still_protects_history(self):
+        update = self.policy["features"]["remoteUpdate"]
+        del update["schemaVersion"]
+        update["revision"] = 5
+        self.write(self.policy)
+        legacy = self.save()
+        self.assertNotEqual(self.verify(legacy).returncode, 0)
+        update["schemaVersion"] = 1
+        self.write(self.policy)
+        self.assertEqual(self.verify(base=legacy).returncode, 0)
+        update["revision"] = 4
+        self.write(self.policy)
+        self.assertNotEqual(self.verify(base=legacy).returncode, 0)
 
     def test_exact_commit_is_checked_instead_of_uncommitted_repairs(self):
         self.policy["features"]["remoteUpdate"]["revision"] = 1

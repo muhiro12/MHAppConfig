@@ -26,8 +26,11 @@ def contents(reference, path):
     return git("show", reference + ":" + path) if reference else Path(path).read_bytes()
 
 
-def run_validator(validator, candidate, previous=None):
-    arguments = [validator, str(candidate)]
+def run_validator(validator, candidate, previous=None, *, historical=False):
+    arguments = [validator]
+    if historical:
+        arguments.append("--historical")
+    arguments.append(str(candidate))
     if previous:
         arguments.append(str(previous))
     return subprocess.run(arguments, capture_output=True, text=True, check=False)
@@ -40,7 +43,7 @@ def validate_history(validator, base, path, current, previous):
         if path not in paths(reference):
             continue
         previous.write_bytes(contents(reference, path))
-        if run_validator(validator, previous).returncode:
+        if run_validator(validator, previous, historical=True).returncode:
             print("Unreadable historical policy at " + reference + ": " + path, flush=True)
             continue
         result = run_validator(validator, current, previous)

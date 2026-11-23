@@ -13,11 +13,10 @@ Configuration history is independent of each app's source releases.
 | Stally | [stally/app.json](stally/app.json) |
 
 The shared configuration envelope contains `schemaVersion`, `bundleIdentifier`,
-and `features`. The update feature has its own `schemaVersion` (currently 1;
-omission also means 1), independently of the envelope version and policy
-revision. Each feature owns its policy and revisions. Incomes currently
-uses only `features.remoteUpdate`; additional feature sections can share the
-same document when an adopting app needs them.
+and `features`. The update feature requires its own `"schemaVersion": 1`, independently of
+the envelope version and policy revision. MHPlatform 1.24.0 and later require
+the key on fetch. Declaring the previously implicit version preserves the
+policy revision. Other features can share the same document.
 
 Incomes uses App Store ID `1584472982` and the package's default publication
 reference without a fixed country code. Store identity belongs to the client
@@ -77,7 +76,7 @@ for already-distributed clients; it has a different format and endpoint.
   than republishing an older file.
 
 Read the package's
-[configuration and update contract](https://github.com/muhiro12/MHPlatform/blob/1.20.0/Designs/Architecture/remote-update.md)
+[configuration and update contract](https://github.com/muhiro12/MHPlatform/blob/1.24.0/Designs/Architecture/remote-update.md)
 for feature isolation, plan evaluation, offline freshness, and App Store
 publication checks. Maintain one current shared configuration per app, without
 separate policy endpoints for obsolete prerelease readers.
@@ -94,14 +93,15 @@ git diff --check
 ```
 
 The first command obtains the pinned public MHPlatform source and builds only
-its configuration/update modules with Apple's compiler. It adds no app-side
+its configuration, update, and announcement modules with Apple's compiler. It adds no app-side
 configuration or dependency. An existing clean checkout at the pinned revision
 can be used offline with `MHPLATFORM_CHECKOUT=/path/to/MHPlatform`.
 The generated checkout, modules, and executable remain in ignored `.build/`.
 
 The validator uses the same decoder and immutable-revision comparison as the
 package's runtime. It checks every `*/app.json` and compares it with readable
-policy in the destination branch's first-parent history. It rejects invalid
+policy in the destination branch's first-parent history. The historical check
+accepts a missing update feature version as version 1 only in prior objects. It rejects invalid
 requirements, unsupported format versions, identity changes, endpoint deletion,
 lower revisions, and changed content at an already published revision. Sibling
 features do not change update-policy revisions. It does not check App Store
